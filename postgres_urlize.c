@@ -10,6 +10,27 @@ Datum urlize(PG_FUNCTION_ARGS);
 
 PG_FUNCTION_INFO_V1(urlize);
 
+/**
+ * Returns a pretty, hyphenated string for search engine optimized URLs.
+ *
+ * To use within PostgreSQL as a function:
+ *
+ *     CREATE OR REPLACE FUNCTION
+ *         hello(varchar)
+ *     RETURNS
+ *         varchar
+ *     AS
+ *        'urlize.so', 'urlize'
+ *     LANGUAGE
+ *         C
+ *     STRICT
+ *     IMMUTABLE;
+ *
+ * Example:
+ * template1=# SELECT urlize('Ruby vs. Python: The Benefits of Monkeypatching
+ * and Chainability');
+ * ruby-vs-python-the-benefits-of-monkeypatching-and-chainability
+ */
 Datum urlize(PG_FUNCTION_ARGS)
 {
     VarChar *src = PG_GETARG_VARCHAR_P(0);
@@ -70,7 +91,7 @@ Datum urlize(PG_FUNCTION_ARGS)
             break;
         ++i;
     }
-    strcpy(buf2, buf1+i);
+    strcpy(buf2, buf1 + i);
 
     /* Strip trailing dashes */
     len = strlen(buf2);
@@ -81,7 +102,7 @@ Datum urlize(PG_FUNCTION_ARGS)
             break;
         --i;
     }
-    strncpy(buf1, buf2, i+1);
+    strncpy(buf1, buf2, i + 1);
     buf1[i+1] = '\0';
 
     pfree(buf2);
