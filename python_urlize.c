@@ -13,6 +13,8 @@ static PyObject* urlize(PyObject *self, PyObject *args)
     unsigned int i, j;
     unsigned short int repeat = 0;
 
+    Py_BEGIN_ALLOW_THREADS
+
     if (!PyArg_ParseTuple(args, "O", &obj))
         return NULL;
 
@@ -39,14 +41,17 @@ static PyObject* urlize(PyObject *self, PyObject *args)
     }
 
     /* Replace all non-alphanumeric characters with a dash */
-    for (i = 0; i < len; ++i) {
+    for (i = 0, j = 0; i < len; ++i) {
         c = src[i];
-        if (isalnum(c))
-            buf1[i] = tolower(c);
+        if (c == '\'')
+            continue;
+        else if (isalnum(c))
+            buf1[j] = tolower(c);
         else
-            buf1[i] = '-';
+            buf1[j] = '-';
+        ++j;
     }
-    buf1[i] = '\0';
+    buf1[j] = '\0';
 
     len = strlen(buf1);
     buf2 = (char*) PyMem_New(char, len + 1);
@@ -97,6 +102,9 @@ static PyObject* urlize(PyObject *self, PyObject *args)
 
     res = PyString_FromString(buf2);
     PyMem_Del(buf2);
+
+    Py_END_ALLOW_THREADS
+
     return res;
 }
 

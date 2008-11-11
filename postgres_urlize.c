@@ -58,14 +58,17 @@ Datum urlize(PG_FUNCTION_ARGS)
     memcpy(buf1, VARDATA(src), len);
 
     /* Replace all non-alphanumeric characters with a dash */
-    for (i = 0; i < len; ++i) {
+    for (i = 0, j = 0; i < len; ++i) {
         c = buf1[i];
-        if (isalnum(c))
-            buf2[i] = tolower(c);
+        if (c == '\'')
+            continue;
+        else if (isalnum(c))
+            buf2[j] = tolower(c);
         else
-            buf2[i] = '-';
+            buf2[j] = '-';
+        ++j;
     }
-    buf2[i] = '\0';
+    buf2[j] = '\0';
 
     /* Reduce repeating dashes */
     for (i = 0, j = 0; i < len; ++i) {
