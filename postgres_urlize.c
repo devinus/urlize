@@ -1,3 +1,8 @@
+/*
+ * urlize - search engine optimized URLs
+ * Copyright (c) 2008 Devin Torres
+ * Licensed under the MIT license.
+ */
 #include <postgres.h>
 #include <fmgr.h>
 #include <stdio.h>

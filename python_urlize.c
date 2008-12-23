@@ -1,3 +1,8 @@
+/*
+ * urlize - search engine optimized URLs
+ * Copyright (c) 2008 Devin Torres
+ * Licensed under the MIT license.
+ */
 #include <Python.h>
 
 static PyObject* urlize(PyObject *self, PyObject *args)
@@ -12,8 +17,6 @@ static PyObject* urlize(PyObject *self, PyObject *args)
     size_t len;
     unsigned int i, j;
     unsigned short int repeat = 0;
-
-    Py_BEGIN_ALLOW_THREADS
 
     if (!PyArg_ParseTuple(args, "O", &obj))
         return NULL;
@@ -103,8 +106,6 @@ static PyObject* urlize(PyObject *self, PyObject *args)
     res = PyString_FromString(buf2);
     PyMem_Del(buf2);
 
-    Py_END_ALLOW_THREADS
-
     return res;
 }
 
@@ -114,7 +115,7 @@ static PyMethodDef methods[] = {
 };
 
 PyMODINIT_FUNC
-init_speedups(void)
+initurlize(void)
 {
     (void) Py_InitModule("urlize", methods);
 }
